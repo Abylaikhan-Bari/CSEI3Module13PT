@@ -12,7 +12,22 @@ namespace Module13PT
     {
         static void Main(string[] args)
         {
-            example8();
+
+            // example1();
+            // example2();
+            // example3();
+            // example4();
+            // example5();
+            // example6();
+            // example7();
+            // ProcessEmployeeData();
+
+            // MusicCdCatalog example
+            var cdCatalog = new MusicCdCatalog();
+            cdCatalog.AddCd("Best of 80s", new List<string> { "Song1", "Song2" });
+            cdCatalog.AddSongToCd("Best of 80s", "Song3");
+            cdCatalog.DisplayCatalog();
+            cdCatalog.SearchArtist("Song1");
             Console.ReadKey();
         }
         static void example1()
@@ -196,12 +211,110 @@ namespace Module13PT
             }
         }
 
-        static void example8()
-        {
-            //4.Дан файл, содержащий информацию о сотрудниках фирмы: фамилия, имя, отчество, пол, возраст, размер зарплаты.
-            //За один просмотр файла напечатать элементы файла в следующем порядке: сначала все данные о сотрудниках, зарплата которых меньше 10000,
-            //потом данные об остальных сотрудниках, сохраняя исходный порядок в каждой группе сотрудников.
+       
+    }
+    class Employee
+    {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public string MiddleName { get; set; }
+        public string Gender { get; set; }
+        public int Age { get; set; }
+        public decimal Salary { get; set; }
 
+        public override string ToString()
+        {
+            return $"{FirstName} {LastName} {MiddleName}, Gender: {Gender}, Age: {Age}, Salary: {Salary}";
+        }
+        static void ProcessEmployeeData()
+        {
+            
+            List<Employee> employees = new List<Employee>
+    {
+        
+        new Employee { FirstName = "John", LastName = "Price", MiddleName = "K", Gender = "M", Age = 30, Salary = 8000 },
+        
+    };
+
+            var lowSalaryGroup = employees.Where(e => e.Salary < 10000);
+            var highSalaryGroup = employees.Where(e => e.Salary >= 10000);
+
+            foreach (var employee in lowSalaryGroup)
+            {
+                Console.WriteLine(employee);
+            }
+
+            foreach (var employee in highSalaryGroup)
+            {
+                Console.WriteLine(employee);
+            }
         }
     }
+    class MusicCdCatalog
+    {
+        private Hashtable catalog = new Hashtable();
+
+        public void AddCd(string cdTitle, List<string> songs)
+        {
+            catalog[cdTitle] = songs;
+        }
+
+        public void RemoveCd(string cdTitle)
+        {
+            catalog.Remove(cdTitle);
+        }
+
+        public void AddSongToCd(string cdTitle, string song)
+        {
+            if (catalog.ContainsKey(cdTitle))
+            {
+                ((List<string>)catalog[cdTitle]).Add(song);
+            }
+        }
+
+        public void RemoveSongFromCd(string cdTitle, string song)
+        {
+            if (catalog.ContainsKey(cdTitle))
+            {
+                ((List<string>)catalog[cdTitle]).Remove(song);
+            }
+        }
+
+        public void DisplayCatalog()
+        {
+            foreach (DictionaryEntry entry in catalog)
+            {
+                Console.WriteLine($"CD: {entry.Key}");
+                foreach (var song in (List<string>)entry.Value)
+                {
+                    Console.WriteLine($" - {song}");
+                }
+            }
+        }
+
+        public void DisplaySongsOfCd(string cdTitle)
+        {
+            if (catalog.ContainsKey(cdTitle))
+            {
+                Console.WriteLine($"CD: {cdTitle}");
+                foreach (var song in (List<string>)catalog[cdTitle])
+                {
+                    Console.WriteLine($" - {song}");
+                }
+            }
+        }
+
+        public void SearchArtist(string artist)
+        {
+            foreach (DictionaryEntry entry in catalog)
+            {
+                var songs = (List<string>)entry.Value;
+                if (songs.Any(song => song.Contains(artist)))
+                {
+                    Console.WriteLine($"Artist {artist} found in CD: {entry.Key}");
+                }
+            }
+        }
+    }
+
 }
